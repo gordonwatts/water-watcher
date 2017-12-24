@@ -27,18 +27,42 @@ def rc_time (pin):
 
 	return count
 
+class LightSensor:
+	'''Monitor light sensor bin '''
+	
+	def __init__ (self, pin):
+		self._pin = pin
+		self._old_value = -1
+		self._allowed_delta = 500
+
+	def update (self):
+		'''Monitor pin for a change'''
+		new_value = rc_time(self._pin)
+		if abs(new_value - self._old_value) > self._allowed_delta:
+			self.record_state_change(new_value)
+		return None
+
+	def record_state_change(self, new_value):
+		# Record info about last state change.
+		r = (self._old_value, new_value)
+
+		# Update the counters to the new value.
+		self._old_value = new_value
+		nd = 0.2 * old_value
+		self._allowed_delta = nd if nd > 500 else 500
+
+		return r
+
+
 #Catch when script is interrupted, cleanup correctly
 try:
     # Main loop
-	old_value = -1
-	allowed_delta = 500
+	ls1 = LightSensor(sensor_1_pin)
+
 	while True:
-		new_value = rc_time(sensor_1_pin)
-		if abs(new_value - old_value) > allowed_delta:
-			if old_value > 0:
-				print "Changed to: ", new_value
-			old_value = new_value
-			allowed_delta = 0.2 * old_value
+		v = ls1.update()
+		if n != None:
+			print v[0], " -> ", v[1]
 except KeyboardInterrupt:
     pass
 finally:
