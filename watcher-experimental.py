@@ -64,7 +64,8 @@ class LightSensor:
 def print_state(info):
 	if (info[2].days != 0) or (info[2].seconds > 1):
 		mstr = "%s: State at level %d lasted %s" % (str(datetime.now()), info[0], info[2])
-		print mstr
+		with open("/var/www/html/index.txt", "a") as myfile:
+			myfile.write(mstr + "\n")
 
 #Catch when script is interrupted, cleanup correctly
 try:
