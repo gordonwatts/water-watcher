@@ -53,9 +53,9 @@ class LightSensor:
 		state_end = datetime.now()
 		r = (self._old_value, new_value, state_end - self._state_start)
 		update_internal_numbers(new_value)
-		retun r
+		return r
 
-	def update_internal_numbers (self, new_value)
+	def update_internal_numbers (self, new_value):
 		# Update the counters to the new value.
 		self._old_value = new_value
 		nd = 0.25 * self._old_value
