@@ -45,7 +45,10 @@ class LightSensor:
 		new_value = rc_time(self._pin)
 		if abs(new_value - self._old_value) > self._allowed_delta:
 			return self.record_state_change(new_value)
-		self.update_internal_numbers(new_value)
+
+		# Allow a moving target.
+		if abs(new_value - self._old_value) > (self._allowed_delta/10):
+			self.update_internal_numbers(new_value)
 		return None
 
 	def record_state_change(self, new_value):
