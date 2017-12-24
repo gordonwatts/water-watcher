@@ -38,6 +38,7 @@ class LightSensor:
 		self._pin = pin
 		self._old_value = -1
 		self._allowed_delta = 500
+		self._state_start = datetime.now()
 
 	def update (self):
 		'''Monitor pin for a change'''
@@ -48,15 +49,20 @@ class LightSensor:
 
 	def record_state_change(self, new_value):
 		# Record info about last state change.
-		r = (self._old_value, new_value)
+		state_end = datetime.now()
+		r = (self._old_value, new_value, state_end - self._state_start)
 
 		# Update the counters to the new value.
 		self._old_value = new_value
 		nd = 0.25 * self._old_value
 		self._allowed_delta = nd if nd > 500 else 500
+		self._state_start = state_end
 
 		return r
 
+# Dump out the text that tells us about the state change
+def print_state(info):
+	str = "State at level %d lasted %s" % (info[0], info[2])
 
 #Catch when script is interrupted, cleanup correctly
 try:
@@ -66,7 +72,8 @@ try:
 	while True:
 		v = ls1.update()
 		if v != None:
-			print v[0], " -> ", v[1]
+			print_state(v)
+
 except KeyboardInterrupt:
     pass
 finally:
