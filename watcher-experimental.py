@@ -31,7 +31,7 @@ def rc_time (pin):
 try:
     # Main loop
 	old_value = -1
-    while True:
+	while True:
 		new_value = rc_time(sensor_1_pin)
 		if abs(new_value - old_value) > 500:
 			if old_value > 0:
