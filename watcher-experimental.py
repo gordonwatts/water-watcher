@@ -31,12 +31,14 @@ def rc_time (pin):
 try:
     # Main loop
 	old_value = -1
+	allowed_delta = 500
 	while True:
 		new_value = rc_time(sensor_1_pin)
-		if abs(new_value - old_value) > 500:
+		if abs(new_value - old_value) > allowed_delta:
 			if old_value > 0:
 				print "Changed to: ", new_value
 			old_value = new_value
+			allowed_delta = 0.2 * old_value
 except KeyboardInterrupt:
     pass
 finally:
