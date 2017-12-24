@@ -30,8 +30,13 @@ def rc_time (pin):
 #Catch when script is interrupted, cleanup correctly
 try:
     # Main loop
+	old_value = -1
     while True:
-        print rc_time(sensor_1_pin)
+		new_value = rc_time(sensor_1_pin)
+		if abs(new_value - old_value) > 500:
+			if old_value > 0:
+				print "Changed to: ", new_value
+			old_value = new_value
 except KeyboardInterrupt:
     pass
 finally:
