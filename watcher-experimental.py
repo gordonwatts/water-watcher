@@ -20,12 +20,8 @@ def rc_time (pin):
 
 	#Change the pin back to input
 	GPIO.setup(pin, GPIO.IN)
-<<<<<<< HEAD
 	p_start = datetime.now()
-  
-=======
 
->>>>>>> af5edd4dde8d53a82e128e1b4c0833be66952285
 	#Count until the pin goes high
 	while (GPIO.input(pin) == GPIO.LOW):
 		count += 1
