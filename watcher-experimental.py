@@ -62,8 +62,9 @@ class LightSensor:
 
 # Dump out the text that tells us about the state change
 def print_state(info):
-	mstr = "%s: State at level %d lasted %s" % (str(datetime.now()), info[0], info[2])
-	print mstr
+	if (info[2].days != 0) || (info[2].seconds > 1):
+		mstr = "%s: State at level %d lasted %s" % (str(datetime.now()), info[0], info[2])
+		print mstr
 
 #Catch when script is interrupted, cleanup correctly
 try:
