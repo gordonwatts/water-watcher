@@ -1,0 +1,12 @@
+#!/bin/env python
+
+from datetime import datetime
+from time import sleep
+
+with open("output.txt", "a") as myfile:
+
+	while True:
+		n = datetime.now()
+		myfile.write(str(n) + "\n\r")
+		sleep(2)
+
