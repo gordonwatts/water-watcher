@@ -20,12 +20,16 @@ def rc_time (pin):
 
 	#Change the pin back to input
 	GPIO.setup(pin, GPIO.IN)
+	p_start = datetime.now()
   
 	#Count until the pin goes high
 	while (GPIO.input(pin) == GPIO.LOW):
 		count += 1
+	p_end = datetime.now()
 
-	return count
+	# Convert to microseconds and return that
+	delta = p_end - p_start
+	return delta.seconds*1000000 + delta.microseconds
 
 class LightSensor:
 	'''Monitor light sensor bin '''
