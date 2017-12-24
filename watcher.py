@@ -45,20 +45,22 @@ class LightSensor:
 		new_value = rc_time(self._pin)
 		if abs(new_value - self._old_value) > self._allowed_delta:
 			return self.record_state_change(new_value)
+		self.update_internal_numbers(new_value)
 		return None
 
 	def record_state_change(self, new_value):
 		# Record info about last state change.
 		state_end = datetime.now()
 		r = (self._old_value, new_value, state_end - self._state_start)
+		update_internal_numbers(new_value)
+		retun r
 
+	def update_internal_numbers (self, new_value)
 		# Update the counters to the new value.
 		self._old_value = new_value
 		nd = 0.25 * self._old_value
 		self._allowed_delta = nd if nd > 500 else 500
 		self._state_start = state_end
-
-		return r
 
 # Dump out the text that tells us about the state change
 def print_state(info):
