@@ -52,7 +52,7 @@ class LightSensor:
 		# Record info about last state change.
 		state_end = datetime.now()
 		r = (self._old_value, new_value, state_end - self._state_start)
-		update_internal_numbers(new_value)
+		self.update_internal_numbers(new_value)
 		return r
 
 	def update_internal_numbers (self, new_value):
