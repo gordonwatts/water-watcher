@@ -52,7 +52,7 @@ class LightSensor:
 
 		# Update the counters to the new value.
 		self._old_value = new_value
-		nd = 0.2 * self._old_value
+		nd = 0.25 * self._old_value
 		self._allowed_delta = nd if nd > 500 else 500
 
 		return r
