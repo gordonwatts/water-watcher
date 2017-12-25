@@ -6,26 +6,33 @@ from time import sleep
 import RPi.GPIO as GPIO
 
 def rc_time (pin):
-	'''Returns the time it takes for a pin to go high'''
+	'''Returns the time it takes for a pin to go high
+	
+	Args:
+		pin - the GPIO pin to read
+
+	results
+		time - when we started measuring the time-to-rise
+		delta - how long it took for the signal to rise
+	'''
 	count = 0
 
 	#Output on the pin for
 	GPIO.setup(pin, GPIO.OUT)
 	GPIO.output(pin, GPIO.LOW)
-	sleep(0.1)
+	sleep(0.07)
 
 	#Change the pin back to input
 	GPIO.setup(pin, GPIO.IN)
 	p_start = datetime.now()
 
-	#Count until the pin goes high
-	while (GPIO.input(pin) == GPIO.LOW):
-		count += 1
+	# Wait till it fires, but give a timeout so if it is really dark we don't get "stuck"
+	GPIO.wait_for_edge(pin, GPIO.RISING, timeout=2000)
 	p_end = datetime.now()
 
 	# Convert to microseconds and return that
 	delta = p_end - p_start
-	return delta.seconds*1000000 + delta.microseconds
+	return (p_start, delta.seconds*1000000 + delta.microseconds)
 
 class LightSensor:
 	'''Monitor light sensor bin '''
@@ -46,22 +53,21 @@ class LightSensor:
 		'''Monitor pin for a change'''
 
 		# New value and log it
-		new_value = rc_time(self._pin)
+		p_start, new_value = rc_time(self._pin)
 		self.log (new_value)
 
 		# See if it has changed
 		delta = abs(new_value - self._old_value)
 		if (delta > self._allowed_delta) or (self._old_value < 0):
-			return self.record_state_change(new_value)
+			return self.record_state_change(p_start, new_value)
 
 		# Allow a moving target.
 		if delta > (self._allowed_delta/20):
 			self.update_internal_numbers(new_value)
 		return None
 
-	def record_state_change(self, new_value):
+	def record_state_change(self, state_end, new_value):
 		# Record info about last state change.
-		state_end = datetime.now()
 		r = (self._old_value, new_value, state_end - self._state_start, self._pin)
 		self._state_start = state_end
 		self.update_internal_numbers(new_value)
@@ -77,9 +83,9 @@ class LightSensor:
 def print_state(info):
 	if ((info[2].days != 0) or (info[2].seconds > 1)) or (info[0] < 0):
 		mstr = "%s: Pin %d state at level %d (-> %d) lasted %s" % (str(datetime.now()), info[3], info[0], info[1], info[2])
-		with open("/var/www/html/index.txt", "a") as myfile:
-			myfile.write(mstr + "\n")
-		#print mstr
+		#with open("/var/www/html/index.txt", "a") as myfile:
+		#	myfile.write(mstr + "\n")
+		print mstr
 
 def main ():
 	# Pins we should watch
