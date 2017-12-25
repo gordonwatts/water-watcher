@@ -5,10 +5,6 @@ from time import sleep
 
 import RPi.GPIO as GPIO
 
-# Configure for running
-GPIO.setmode(GPIO.BOARD)
-sensor_1_pin = 7
-
 def rc_time (pin):
 	'''Returns the time it takes for a pin to go high'''
 	count = 0
@@ -54,7 +50,7 @@ class LightSensor:
 	def record_state_change(self, new_value):
 		# Record info about last state change.
 		state_end = datetime.now()
-		r = (self._old_value, new_value, state_end - self._state_start)
+		r = (self._old_value, new_value, state_end - self._state_start, self._pin)
 		self._state_start = state_end
 		self.update_internal_numbers(new_value)
 		return r
@@ -68,22 +64,32 @@ class LightSensor:
 # Dump out the text that tells us about the state change
 def print_state(info):
 	if (info[2].days != 0) or (info[2].seconds > 1):
-		mstr = "%s: State at level %d lasted %s" % (str(datetime.now()), info[0], info[2])
-		with open("/var/www/html/index.txt", "a") as myfile:
-			myfile.write(mstr + "\n")
-		#print mstr
+		mstr = "%s: Pin %d state at level %d (-> %d) lasted %s" % (str(datetime.now()), info[3], info[0], info[1], info[2])
+		#with open("/var/www/html/index.txt", "a") as myfile:
+		#	myfile.write(mstr + "\n")
+		print mstr
 
-#Catch when script is interrupted, cleanup correctly
-try:
-    # Main loop
-	ls1 = LightSensor(sensor_1_pin)
+def main:
+	# Pins we should watch
+	pins_to_watch = [7, 11]
 
-	while True:
-		v = ls1.update()
-		if v != None:
-			print_state(v)
+	# Configure GPIO to run
+	GPIO.setmode(GPIO.BOARD)
+	# Do our best to clean up if we die
+	try:
+		# Create the watcher objects
+		sensors = [LightSensor(pin) for pins in pins_to_watch]
 
-except KeyboardInterrupt:
-    pass
-finally:
-    GPIO.cleanup()
+		while True:
+			results = [ls1.update() for ls in sensors]
+			for v in results:
+				if v != None:
+					print_state(v)
+
+	except KeyboardInterrupt:
+		pass
+	finally:
+		GPIO.cleanup()
+
+if __name__ == '__main__':
+	main()
