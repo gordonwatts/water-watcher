@@ -39,11 +39,12 @@ class LightSensor:
 	def update (self):
 		'''Monitor pin for a change'''
 		new_value = rc_time(self._pin)
-		if abs(new_value - self._old_value) > self._allowed_delta:
+		delta = abs(new_value - self._old_value)
+		if (delta > self._allowed_delta) or (self._old_value < 0):
 			return self.record_state_change(new_value)
 
 		# Allow a moving target.
-		if abs(new_value - self._old_value) > (self._allowed_delta/30):
+		if delta > (self._allowed_delta/30):
 			self.update_internal_numbers(new_value)
 		return None
 
@@ -63,7 +64,7 @@ class LightSensor:
 
 # Dump out the text that tells us about the state change
 def print_state(info):
-	if (info[2].days != 0) or (info[2].seconds > 1):
+	if ((info[2].days != 0) or (info[2].seconds > 1)) or (info[0] < 0):
 		mstr = "%s: Pin %d state at level %d (-> %d) lasted %s" % (str(datetime.now()), info[3], info[0], info[1], info[2])
 		#with open("/var/www/html/index.txt", "a") as myfile:
 		#	myfile.write(mstr + "\n")
