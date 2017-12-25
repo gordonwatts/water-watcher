@@ -55,7 +55,7 @@ class LightSensor:
 			return self.record_state_change(new_value)
 
 		# Allow a moving target.
-		if delta > (self._allowed_delta/30):
+		if delta > (self._allowed_delta/20):
 			self.update_internal_numbers(new_value)
 		return None
 
@@ -70,7 +70,7 @@ class LightSensor:
 	def update_internal_numbers (self, new_value):
 		# Update the counters to the new value.
 		self._old_value = new_value
-		nd = 0.15 * self._old_value
+		nd = 0.20 * self._old_value
 		self._allowed_delta = nd if nd > 500 else 500
 
 # Dump out the text that tells us about the state change
