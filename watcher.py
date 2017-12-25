@@ -69,7 +69,7 @@ def print_state(info):
 		#	myfile.write(mstr + "\n")
 		print mstr
 
-def main:
+def main ():
 	# Pins we should watch
 	pins_to_watch = [7, 11]
 
@@ -78,10 +78,10 @@ def main:
 	# Do our best to clean up if we die
 	try:
 		# Create the watcher objects
-		sensors = [LightSensor(pin) for pins in pins_to_watch]
+		sensors = [LightSensor(pin) for pin in pins_to_watch]
 
 		while True:
-			results = [ls1.update() for ls in sensors]
+			results = [ls.update() for ls in sensors]
 			for v in results:
 				if v != None:
 					print_state(v)
