@@ -41,6 +41,6 @@ def watchpin(pin):
 
 if __name__ == '__main__':
 	pin = 7
-	if len(sys.args) > 1:
-		pin = int(sys.args[1])
+	if len(sys.argv) > 1:
+		pin = int(sys.argv[1])
 	watchpin(pin)
