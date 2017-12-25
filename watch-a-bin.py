@@ -1,0 +1,46 @@
+#!/bin/env python
+# Watch a single bin, dump output to the screen
+
+from datetime import datetime
+import sys
+import RPi.GPIO as GPIO
+
+def rc_time (pin):
+	'''Returns the time it takes for a pin to go high (microseconds)'''
+	count = 0
+
+	#Output on the pin for
+	GPIO.setup(pin, GPIO.OUT)
+	GPIO.output(pin, GPIO.LOW)
+	sleep(0.1)
+
+	#Change the pin back to input
+	GPIO.setup(pin, GPIO.IN)
+	p_start = datetime.now()
+
+	#Count until the pin goes high
+	while (GPIO.input(pin) == GPIO.LOW):
+		count += 1
+	p_end = datetime.now()
+
+	# Convert to microseconds and return that
+	delta = p_end - p_start
+	return delta.seconds*1000000 + delta.microseconds
+
+# watch a single pin and print it out.
+def watchpin(pin):
+	try:
+		while True:
+			v = rc_time(pin)
+			print "Pin %d took %d microseconds to rise" % (pin, v)
+
+	except KeyboardInterrupt:
+		pass
+	finally:
+		GPIO.cleanup()
+
+if __name__ == '__main__':
+	pin = 7
+	if len(sys.args) > 1:
+		pin = int(sys.args[1])
+	watchpin(pin)
