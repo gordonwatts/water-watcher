@@ -20,7 +20,7 @@ def rc_time (pin):
 	GPIO.setup(pin, GPIO.IN)
 	p_start = datetime.now()
 
-	GPIO.wait_for_edge(pin, GPIO.RISING)
+	GPIO.wait_for_edge(pin, GPIO.RISING, timeout=2000)
 	p_end = datetime.now()
 
 	# Convert to microseconds and return that
