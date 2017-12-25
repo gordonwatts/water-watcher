@@ -36,6 +36,12 @@ class LightSensor:
 		self._allowed_delta = 500
 		self._state_start = datetime.now()
 
+	def log (self, value):
+		''' Log the new pin value'''
+		fname = "pin-%d-%s.log" % (self._pin, datetime.strftime(datetime.now(), '%Y-%m-%d'))
+		with open(fname, "a") as myfile:
+			myfile.write("%s: %d" % (datetime.now(), value))
+
 	def update (self):
 		'''Monitor pin for a change'''
 
@@ -52,12 +58,6 @@ class LightSensor:
 		if delta > (self._allowed_delta/30):
 			self.update_internal_numbers(new_value)
 		return None
-
-	def log (self, value):
-		''' Log the new pin value'''
-		fname = "pin-%d-%s.log" % (self._pin, datetime.strftime(datetime.now(), '%Y-%m-%d'))
-		with open(fname, "a") as myfile:
-			myfile.write("%s: %d" % (datetime.now(), value))
 
 	def record_state_change(self, new_value):
 		# Record info about last state change.
