@@ -14,7 +14,7 @@ def rc_time (pin):
 	#Output on the pin for
 	GPIO.setup(pin, GPIO.OUT)
 	GPIO.output(pin, GPIO.LOW)
-	sleep(0.1)
+	sleep(0.07)
 
 	#Change the pin back to input
 	GPIO.setup(pin, GPIO.IN)
