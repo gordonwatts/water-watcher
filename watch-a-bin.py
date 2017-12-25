@@ -4,6 +4,7 @@
 from datetime import datetime
 import sys
 import RPi.GPIO as GPIO
+from time import sleep
 
 def rc_time (pin):
 	'''Returns the time it takes for a pin to go high (microseconds)'''
