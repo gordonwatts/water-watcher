@@ -29,6 +29,7 @@ def rc_time (pin):
 
 # watch a single pin and print it out.
 def watchpin(pin):
+	GPIO.setmode(GPIO.BOARD)
 	try:
 		while True:
 			v = rc_time(pin)
