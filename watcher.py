@@ -38,16 +38,16 @@ class LightSensor:
 
 	def log (self, value):
 		''' Log the new pin value'''
-		fname = "pin-%d-%s.log" % (self._pin, datetime.strftime(datetime.now(), '%Y-%m-%d'))
+		fname = "logs/pin-%d-%s.log" % (self._pin, datetime.strftime(datetime.now(), '%Y-%m-%d'))
 		with open(fname, "a") as myfile:
-			myfile.write("%s: %d" % (datetime.now(), value))
+			myfile.write("%s: %d\n" % (datetime.now(), value))
 
 	def update (self):
 		'''Monitor pin for a change'''
 
 		# New value and log it
 		new_value = rc_time(self._pin)
-		log (new_value)
+		self.log (new_value)
 
 		# See if it has changed
 		delta = abs(new_value - self._old_value)
@@ -77,9 +77,9 @@ class LightSensor:
 def print_state(info):
 	if ((info[2].days != 0) or (info[2].seconds > 1)) or (info[0] < 0):
 		mstr = "%s: Pin %d state at level %d (-> %d) lasted %s" % (str(datetime.now()), info[3], info[0], info[1], info[2])
-		#with open("/var/www/html/index.txt", "a") as myfile:
-		#	myfile.write(mstr + "\n")
-		print mstr
+		with open("/var/www/html/index.txt", "a") as myfile:
+			myfile.write(mstr + "\n")
+		#print mstr
 
 def main ():
 	# Pins we should watch
