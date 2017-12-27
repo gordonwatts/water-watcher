@@ -1,3 +1,7 @@
 
 *.log
 notebooks/.ipynb_checkpoints/*
+client_code.data
+client_id.txt
+client_secret.txt
+*.uploaded
