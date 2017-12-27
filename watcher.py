@@ -83,8 +83,8 @@ class LightSensor:
 def print_state(info):
 	if ((info[2].days != 0) or (info[2].seconds > 1)) or (info[0] < 0):
 		mstr = "%s: Pin %d state at level %d (-> %d) lasted %s" % (str(datetime.now()), info[3], info[0], info[1], info[2])
-		#with open("/var/www/html/index.txt", "a") as myfile:
-		#	myfile.write(mstr + "\n")
+		with open("/var/www/html/index.txt", "a") as myfile:
+			myfile.write(mstr + "\n")
 		print mstr
 
 def main ():
